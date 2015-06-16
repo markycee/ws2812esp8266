@@ -12,13 +12,13 @@ SRCS:=driver/uart.c \
 	user/ws2812.c \
 	user/user_main.c
 
-GCC_FOLDER:=~/esp-open-sdk/xtensa-lx106-elf
+GCC_FOLDER:=/home/mc/esp-open-sdk/xtensa-lx106-elf
 ESPTOOL_PY:=$(GCC_FOLDER)/bin/esptool.py
-SDK:=~/esp-open-sdk/sdk
+SDK:=/home/mc/esp-open-sdk/sdk
 PORT:=/dev/ttyUSB0
 
-XTLIB:=$(SDK)/lib/
-XTGCCLIB:=$(GCC_FOLDER)/lib/gcc/xtensa-lx106-elf/4.8.2/
+XTLIB:=$(SDK)/lib
+XTGCCLIB:=$(GCC_FOLDER)/lib/gcc/xtensa-lx106-elf/4.8.2
 CC:=$(GCC_FOLDER)/bin/xtensa-lx106-elf-gcc
 
 # for compiler
@@ -28,10 +28,15 @@ CC:=$(GCC_FOLDER)/bin/xtensa-lx106-elf-gcc
 #	-T FILE		Read linker script
 
 LIBS:= lwip ssl net80211 wpa phy main pp gcc c
-
-CFLAGS:=-v -mlongcalls -Os -Iinclude -Iuser -I$(SDK)/include
+CFLAGS:=-v -mlongcalls -Os -nostdinc \
+-I include \
+-I user \
+-I $(SDK)/include \
+-I $(GCC_FOLDER)/xtensa-lx106-elf/include \
+-I $(XTGCCLIB)/include/ 
+									 
 LDFLAGS_CORE:=-nostdlib \
- 	-Wl,--gc-sections \
+	-Wl,--gc-sections \
 	-Wl,--relax \
 	-L $(XTLIB) \
 	-L $(XTGCCLIB) \
